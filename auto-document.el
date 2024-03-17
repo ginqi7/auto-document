@@ -289,7 +289,7 @@ See also `print-level'."
 
 (defun adoc-output (buf)
   "Scan for command definitions in BUF and generate command list."
-  (destructuring-bind (commands options)
+  (cl-destructuring-bind (commands options)
       (adoc-construct buf)
     (adoc-output-commands commands buf)
     (adoc-output-separator)
@@ -297,14 +297,14 @@ See also `print-level'."
 
 (defun adoc-output-section (section pairs header-msg name-fmt doc-fmt)
   (adoc-output-section-header section header-msg)
-  (loop for (name . doc) in pairs do
+  (cl-loop for (name . doc) in pairs do
         (princ (format name-fmt name))
         (princ (format doc-fmt (substring doc 0 (string-match "$" doc))))))
 
 (defun adoc-output-commands (pairs buf)
   (let ((keymaps (jb-keymaps-in-file (buffer-file-name buf))))
     (adoc-output-section-header "Commands" adoc-command-list-header-message)
-    (loop for (name . doc) in pairs do
+    (cl-loop for (name . doc) in pairs do
 	  (princ (format adoc-command-name-format name))
 	  (princ (format adoc-command-doc-format (adoc-first-line doc)))
 	  (princ (format adoc-command-keybinding-format
@@ -312,7 +312,7 @@ See also `print-level'."
 
 (defun adoc-output-customizable-options (pairs)
   (adoc-output-section-header "Customizable Options" adoc-option-list-header-message)
-  (loop for (name doc default) in pairs do
+  (cl-loop for (name doc default) in pairs do
         (princ (format adoc-option-name-format name))
         (princ (format adoc-option-doc-format (adoc-first-line doc)))
         (princ (format adoc-option-default-format (adoc-prin1-to-string default)))))
